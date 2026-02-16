@@ -1,0 +1,913 @@
+
+::group::Analyzing Codebase for Update Risk
+Usage scores calculated.
+::endgroup::
+INFO: Found pinned requirements. Running initial health check and regenerating lockfile...
+
+::group::Initial Baseline Health Check
+--> Bootstrap Step 1: Installing dependencies from 'requirements.txt'...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/initial_check_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/requirements.txt' in CWD: '.'
+
+--> Bootstrap Step 2: Installing project from current directory ('.') in editable mode...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/initial_check_venv/bin/python -m pip install --no-build-isolation -e .' in CWD: '.'
+
+--> Bootstrap Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/initial_check_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/initial_check_venv/bin/python -m pip freeze' in CWD: '.'
+Initial baseline is valid and stable. Overwriting requirements file with clean, frozen state.
+::endgroup::
+INFO: Dependency graph metrics not found. Entanglement scores will be 0.
+
+::group::UPDATE PASS 1/3
+
+Prioritized Update Plan for this Pass (Highest Risk First):
+Rank  | Package                        | % of Total Risk    | Change
+----- | ------------------------------ | ------------------ | --------------------
+1     | numpy                          | 12.20             % | 1.21.0 -> 2.4.2
+2     | importlib-metadata             | 12.20             % | 4.8.1 -> 8.7.1
+3     | lz4                            | 12.20             % | 3.1.3 -> 4.4.5
+4     | cloudpickle                    | 12.20             % | 1.6.0 -> 3.1.2
+5     | pillow                         | 12.20             % | 11.3.0 -> 12.1.1
+6     | matplotlib                     | 6.10              % | 3.4.3 -> 3.10.8
+7     | pygame                         | 6.10              % | 2.1.0 -> 2.6.1
+8     | ale-py                         | 6.10              % | 0.7.1 -> 0.11.2
+9     | imageio                        | 6.10              % | 2.14.1 -> 2.37.2
+10    | opencv-python                  | 6.10              % | 4.5.3.56 -> 4.13.0.92
+11    | gym-notices                    | 6.10              % | 0.0.4 -> 0.1.0
+12    | box2d-py                       | 1.22              % | 2.3.5 -> 2.3.8
+13    | kiwisolver                     | 1.22              % | 1.4.7 -> 1.4.9
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 1/13] Processing 'numpy'
+PULSE: Changed packages this pass so far: set()
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to numpy==2.4.2
+
+::group::Probe: Install & Validate for numpy==2.4.2
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The root cause of the dependency conflict is that the required package `numpy==2.4.2` demands Python version `3.11` or newer, making it incompatible with the currently used Python environment.'
+    Suspected Blockers (Regex): ['numpy']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'numpy': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of numpy==2.4.2...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requirement for `numpy==2.4.2`, which demands Python version >=3.11, but the current Python environment does not meet this version requirement, leading pip to ignore it and fail to find a matching distribution.
+  -> Checking compatibility of numpy==2.4.1...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `numpy==2.4.1` (as well as versions `2.3.0` through `2.4.2`) requires Python 3.11 or higher, which the current Python environment does not satisfy, leading to these specific versions being ignored and ultimately not found.
+  -> Checking compatibility of numpy==2.4.0...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the explicit requirement for `numpy==2.4.0`, which pip cannot find as an available version; the highest `numpy` distribution found ranges only up to `2.0.2`.
+  -> Checking compatibility of numpy==2.3.5...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the current Python environment being incompatible with `numpy==2.3.5`, as it requires Python >=3.11, leading `pip` to ignore it along with other specific `numpy` versions such as `1.4.10rc0`, `1.4.8`, `12.0.0`, `2.1.0`, `2.2.0`, `2.3.0`, `2.3.1`, `2.3.2`, `2.3.3`, `2.3.4`, `2.4.0`, and `3.10.0` due to their respective Python version requirements.
+  -> Checking compatibility of numpy==2.3.4...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `numpy==2.3.4` (along with other versions such as 1.4.8, 1.4.9, 1.4.10rc0, 12.0.0, 12.1.0, 12.1.1, 2.1.0-2.2.6, 2.3.0-2.3.5, 2.4.0, 2.4.0rc1, 2.4.1, 2.4.2, 3.10.0, 3.10.0rc1, 3.10.1, 3.10.3, 3.10.5, 3.10.6, 3.10.7, and 3.10.8) could not be installed because they require Python >=3.10 or >=3.11, which is newer than the currently active Python environment.
+  -> Checking compatibility of numpy==2.3.3...
+     -- Incompatible. Diagnosis: The dependency conflict occurs because `numpy==2.3.3` and other versions such as `2.3.0` to `2.4.2` explicitly require Python `3.11` or newer, which is not satisfied by the current Python environment.
+  -> Checking compatibility of numpy==2.3.2...
+     -- Incompatible. Diagnosis: The dependency conflict's root cause is that the current Python environment is too old for the requested `numpy==2.3.2` (which specifically requires Python >=3.11), leading to it being ignored along with `numpy` versions `2.3.0`-`2.3.1`, `2.3.3`-`2.3.5`, `2.4.0`, `2.4.0rc1`, `2.4.1`, `2.4.2` (which also require Python >=3.11), and other package versions `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0`-`2.2.6`, `3.10.0`, `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.7`, `3.10.8` (which require Python >=3.10 or >=3.11), while only `numpy` versions `1.3.0` through `2.0.2` are found as compatible options.
+  -> Checking compatibility of numpy==2.3.1...
+     -- Incompatible. Diagnosis: The dependency conflict is rooted in the current Python environment not satisfying the `Requires-Python >=3.11` dependency for `numpy==2.3.1`, causing `pip` to ignore this and other versions like `1.4.10rc0` and `12.0.0` that also require Python versions higher than the one in use.
+  -> Checking compatibility of numpy==2.3.0...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `numpy==2.3.0` requires Python >=3.11, which is not met by the current environment, leading `pip` to ignore it and other incompatible versions like `1.4.10rc0`, `2.2.0`, `2.3.1`, `2.4.0`, and `3.10.0` due to their specific Python >=3.10 or >=3.11 requirements.
+  -> Checking compatibility of numpy==2.2.6...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the current Python environment is too old, causing it to ignore the specifically requested `numpy==2.2.6` (which requires Python `>=3.10`) along with other compatible `numpy` versions like `1.4.8`, `1.4.9`, `1.4.10rc0`, and `2.1.0` through `2.4.2` because they also require Python `>=3.10` or `>=3.11`.
+  -> Checking compatibility of numpy==2.2.5...
+     -- Incompatible. Diagnosis: The dependency conflict arises because the requested `numpy==2.2.5` is among the numerous NumPy versions (specifically `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0`, `2.1.1`, `2.1.2`, `2.1.3`, `2.2.0`, `2.2.1`, `2.2.2`, `2.2.3`, `2.2.4`, `2.2.5`, `2.2.6`, `2.3.0`, `2.3.1`, `2.3.2`, `2.3.3`, `2.3.4`, `2.3.5`, `2.4.0`, `2.4.0rc1`, `2.4.1`, `2.4.2`, `3.10.0`, `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.7`, `3.10.8`) that were ignored because they require a Python version (e.g., `>=3.10` or `>=3.11`) higher than the one currently in use, leading to no compatible distribution being found.
+  -> Checking compatibility of numpy==2.2.4...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the current Python environment not meeting the `Python >=3.10` requirement for the explicitly requested `numpy==2.2.4` package.
+  -> Checking compatibility of numpy==2.2.3...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `numpy==2.2.3` could not be found because the current Python environment is incompatible with many available `numpy` versions, including `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0`, `2.1.1`, `2.1.2`, `2.1.3`, `2.2.0`, `2.2.1`, `2.2.2`, `2.2.4`, `2.2.5`, `2.2.6`, `2.3.0`, `2.3.1`, `2.3.2`, `2.3.3`, `2.3.4`, `2.3.5`, `2.4.0`, `2.4.0rc1`, `2.4.1`, `2.4.2`, `3.10.0`, `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.7`, and `3.10.8`, which all require Python `3.10` or higher.
+  -> Checking compatibility of numpy==2.2.2...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `numpy==2.2.2` (along with other newer `numpy` versions such as `2.1.0` through `2.2.6` and `2.3.0` through `2.4.2`) being ignored because they require Python >=3.10 or >=3.11, which is not met by the current Python environment.
+  -> Checking compatibility of numpy==2.2.1...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `numpy==2.2.1` being ignored because it `Requires-Python >=3.10`, indicating the current Python environment is an incompatible, older version.
+  -> Checking compatibility of numpy==2.2.0...
+     -- Incompatible. Diagnosis: The dependency conflict occurs because the requested `numpy==2.2.0` requires Python version `>=3.10`, but the current Python environment does not meet this requirement, causing it to be ignored and no matching distribution found.
+  -> Checking compatibility of numpy==2.1.3...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `numpy==2.1.3` requires Python `>=3.10`, making it incompatible with the current Python environment, which results in `numpy` versions `2.1.0` through `2.2.6` being ignored (as well as other versions like `1.4.10rc0`, `12.0.0`, and `3.10.0` that require Python `>=3.10` or `>=3.11`), leaving only `numpy` versions up to `2.0.2` available.
+  -> Checking compatibility of numpy==2.1.2...
+     -- Incompatible. Diagnosis: The dependency conflict arises because the explicitly required `numpy==2.1.2`, along with other available versions such as `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0`, `2.1.1`, `2.1.3`, `2.2.0` through `2.2.6`, `2.3.0` through `2.3.5`, `2.4.0`, `2.4.0rc1`, `2.4.1`, `2.4.2`, `3.10.0`, `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.7`, and `3.10.8`, all require a Python version of 3.10 or higher, which is not met by the current Python environment.
+  -> Checking compatibility of numpy==2.1.1...
+     -- Incompatible. Diagnosis: The dependency conflict's root cause is that the requested `numpy==2.1.1` (and other `numpy` versions like `2.1.0` through `2.4.2`) requires a Python version of `>=3.10` or `>=3.11`, which is not met by the current environment, leading them to be ignored.
+  -> Checking compatibility of numpy==2.1.0...
+     -- Incompatible. Diagnosis: The dependency conflict occurs because the requested `numpy==2.1.0` requires Python version 3.10 or higher, causing it to be ignored by the current Python environment.
+  -> Checking compatibility of numpy==2.0.2...
+     -- Compatible.
+  -> Checking compatibility of numpy==2.0.1...
+     -- Compatible.
+  -> Checking compatibility of numpy==2.0.0...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.26.4...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.26.3...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.26.2...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.26.1...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.26.0...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.25.2...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.25.1...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.25.0...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.24.4...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.24.3...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.24.2...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.24.1...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.24.0...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.23.5...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.23.4...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.23.3...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.23.2...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.23.1...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.23.0...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.22.4...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.22.3...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.22.2...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.22.1...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.22.0...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.21.6...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.21.5...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.21.4...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.21.3...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.21.2...
+     -- Compatible.
+  -> Checking compatibility of numpy==1.21.1...
+     -- Compatible.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Found 33 compatible versions to test: ['2.0.2', '2.0.1', '2.0.0', '1.26.4', '1.26.3', '1.26.2', '1.26.1', '1.26.0', '1.25.2', '1.25.1', '1.25.0', '1.24.4', '1.24.3', '1.24.2', '1.24.1', '1.24.0', '1.23.5', '1.23.4', '1.23.3', '1.23.2', '1.23.1', '1.23.0', '1.22.4', '1.22.3', '1.22.2', '1.22.1', '1.22.0', '1.21.6', '1.21.5', '1.21.4', '1.21.3', '1.21.2', '1.21.1']
+
+::group::Probe: Install & Validate for numpy==2.0.2
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+
+SUCCESS: Found latest working version: numpy==2.0.2
+::endgroup::
+--> Healing Result: Level 1 Succeeded. Found new working version: 2.0.2
+  -> SUCCESS. Locking in numpy==2.0.2
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 2/13] Processing 'importlib-metadata'
+PULSE: Changed packages this pass so far: {'numpy'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to importlib-metadata==8.7.1
+
+::group::Probe: Install & Validate for importlib-metadata==8.7.1
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in importlib-metadata==8.7.1
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 3/13] Processing 'lz4'
+PULSE: Changed packages this pass so far: {'numpy', 'importlib-metadata'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to lz4==4.4.5
+
+::group::Probe: Install & Validate for lz4==4.4.5
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in lz4==4.4.5
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 4/13] Processing 'cloudpickle'
+PULSE: Changed packages this pass so far: {'lz4', 'numpy', 'importlib-metadata'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to cloudpickle==3.1.2
+
+::group::Probe: Install & Validate for cloudpickle==3.1.2
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in cloudpickle==3.1.2
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 5/13] Processing 'pillow'
+PULSE: Changed packages this pass so far: {'cloudpickle', 'lz4', 'numpy', 'importlib-metadata'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to pillow==12.1.1
+
+::group::Probe: Install & Validate for pillow==12.1.1
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The dependency conflict is caused by the requested `pillow==12.1.1` requiring Python version 3.10 or higher, which is incompatible with the currently used Python environment.'
+    Suspected Blockers (Regex): ['pillow']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'pillow': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of pillow==12.1.1...
+     -- Incompatible. Diagnosis: The dependency conflict stems from the requirement for `pillow==12.1.1`, which specifies `Requires-Python >=3.10`, but the current Python environment does not meet this minimum version, causing pip to ignore the available `12.1.1` distribution.
+  -> Checking compatibility of pillow==12.1.0...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `pillow==12.1.0` requiring a Python version of `3.10` or newer, which is incompatible with the current Python environment that implicitly runs an older version.
+  -> Checking compatibility of pillow==12.0.0...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the current Python environment being an older version, which leads to the required `pillow==12.0.0` (and other versions like `12.1.0`, `12.1.1`) being ignored because they explicitly require Python >= 3.10.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Result: No compatible versions were found. Reverting to last known good version.
+::endgroup::
+
+--> Action: Level 1 Healing failed for 'pillow'. Escalating to Level 2 'Iterative Greedy Expansion'.
+
+    -> [Greedy Expansion Iteration 1/5]
+
+::group::Co-Resolution Probe: Testing plan ['pillow==12.1.1']
+--> Stage 1: Installing the proposed co-resolution dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_co_res_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -e git+https://github.com/Bhargavvvv2912/gym_AURA@97e3f0ef07ca0b82906745d72cd9215b591e809a#egg=gym ale-py==0.7.1 box2d-py==2.3.5 cloudpickle==3.1.2 cycler==0.12.1 gym-notices==0.0.4 imageio==2.14.1 importlib-metadata==8.7.1 importlib_resources==6.5.2 kiwisolver==1.4.7 lz4==4.4.5 matplotlib==3.4.3 numpy==2.0.2 opencv-python==4.5.3.56 pygame==2.1.0 pyparsing==3.3.2 python-dateutil==2.9.0.post0 six==1.17.0 zipp==3.23.0 pillow==12.1.1' in CWD: '.'
+--> ERROR: Co-resolution installation failed.
+    Diagnosis: The dependency conflict is caused by the requirement for `pillow==12.1.1`, which demands Python 3.10 or newer, rendering it incompatible with the current Python environment that ignores it and therefore cannot find a matching distribution.
+::endgroup::
+
+    -> [Greedy Expansion Iteration 2/5]
+
+       Greedy Heuristic exhausted. Handing dynamic context to Expert.
+
+    -> [LLM Refinement Attempt 1/3] Requesting Expert Plan...
+  -> Result for pillow: Reverted/Kept at 11.3.0 (No Change).
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 6/13] Processing 'matplotlib'
+PULSE: Changed packages this pass so far: {'cloudpickle', 'lz4', 'numpy', 'importlib-metadata'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to matplotlib==3.10.8
+
+::group::Probe: Install & Validate for matplotlib==3.10.8
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The root cause of the dependency conflict is that the requested `matplotlib==3.10.8` cannot be installed because it requires Python 3.10 or newer, a condition not met by the current environment which only makes `matplotlib` versions up to `3.9.4` available.'
+    Suspected Blockers (Regex): ['matplotlib']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'matplotlib': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of matplotlib==3.10.8...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `matplotlib==3.10.8` requiring Python version >=3.10, which is not satisfied by the current environment.
+  -> Checking compatibility of matplotlib==3.10.7...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the current Python environment not meeting the `Requires-Python >=3.10` prerequisite for the requested `matplotlib==3.10.7` (and other versions like `3.10.0`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.8`), leading to these versions being ignored and no matching distribution found.
+  -> Checking compatibility of matplotlib==3.10.6...
+     -- Incompatible. Diagnosis: The dependency conflict stems from the current Python environment being an insufficient version, causing pip to ignore the requested `matplotlib==3.10.6` along with all other `matplotlib` versions listed in the error log, specifically `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0` through `2.2.6`, `3.10.0` through `3.10.8` (which require Python >=3.10), and `2.3.0` through `2.4.2` (which require Python >=3.11).
+  -> Checking compatibility of matplotlib==3.10.5...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that `matplotlib==3.10.5` (along with many other versions like `1.4.10rc0`, `12.0.0`, `2.1.0`, `2.3.0`, `2.4.0`, `3.10.0`) requires Python version `>=3.10` or `>=3.11`, which is not met by the current Python environment.
+  -> Checking compatibility of matplotlib==3.10.3...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `matplotlib==3.10.3` along with other `matplotlib` versions `3.10.0`, `3.10.0rc1`, `3.10.1`, `3.10.5`, `3.10.6`, `3.10.7`, and `3.10.8` are ignored because they all require Python version 3.10 or newer, which is incompatible with the current Python environment.
+  -> Checking compatibility of matplotlib==3.10.1...
+     -- Incompatible. Diagnosis: The dependency conflict is rooted in the current Python environment not meeting the minimum version requirement, as the requested `matplotlib==3.10.1` and many other `matplotlib` versions like `1.4.10rc0`, `12.0.0`, `2.1.0`, `2.2.0`, and `3.10.0` require Python `>=3.10`, while versions such as `2.3.0` and `2.4.0` require Python `>=3.11`, leading to all these incompatible versions being ignored.
+  -> Checking compatibility of matplotlib==3.10.0...
+     -- Incompatible. Diagnosis: The dependency conflict's root cause is that the desired `matplotlib==3.10.0` (along with `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.7`, and `3.10.8`) requires Python >= 3.10, which is not met by the current Python environment.
+  -> Checking compatibility of matplotlib==3.9.4...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.9.3...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.9.2...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.9.1.post1...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.9.1...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.9.0...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.8.4...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.8.3...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that `ale-py==0.7.1`, `imageio==2.14.1`, `matplotlib==3.8.3`, `numpy==2.0.2`, and `opencv-python==4.5.3.56` have conflicting dependencies among themselves.
+  -> Checking compatibility of matplotlib==3.8.2...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that ale-py==0.7.1, imageio==2.14.1, matplotlib==3.8.2, numpy==2.0.2, and opencv-python==4.5.3.56 have conflicting dependencies among themselves, preventing their simultaneous installation.
+  -> Checking compatibility of matplotlib==3.8.1...
+     -- Incompatible. Diagnosis: The dependency conflict arises because the specified versions of `ale-py==0.7.1`, `imageio==2.14.1`, `matplotlib==3.8.1`, `numpy==2.0.2`, and `opencv-python==4.5.3.56` have incompatible requirements among their own dependencies, preventing their simultaneous installation.
+  -> Checking compatibility of matplotlib==3.8.0...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the specified package versions **ale-py==0.7.1, imageio==2.14.1, matplotlib==3.8.0, numpy==2.0.2, and opencv-python==4.5.3.56** have conflicting dependencies among themselves.
+  -> Checking compatibility of matplotlib==3.7.5...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that ale-py==0.7.1, imageio==2.14.1, matplotlib==3.7.5, numpy==2.0.2, and opencv-python==4.5.3.56 have conflicting dependencies among themselves, making their simultaneous installation impossible.
+  -> Checking compatibility of matplotlib==3.7.4...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by ale-py==0.7.1, imageio==2.14.1, matplotlib==3.7.4, numpy==2.0.2, and opencv-python==4.5.3.56 having incompatible dependency requirements with each other.
+  -> Checking compatibility of matplotlib==3.7.3...
+     -- Incompatible. Diagnosis: The dependency conflict arises because `ale-py==0.7.1`, `imageio==2.14.1`, `matplotlib==3.7.3`, `numpy==2.0.2`, and `opencv-python==4.5.3.56` have incompatible sub-dependencies that cannot be simultaneously satisfied.
+  -> Checking compatibility of matplotlib==3.7.2...
+     -- Incompatible. Diagnosis: The dependency conflict arises because `matplotlib==3.7.2` and `pyparsing==3.3.2` have incompatible requirements on their shared dependencies.
+  -> Checking compatibility of matplotlib==3.7.1...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.7.0...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.6.3...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.6.2...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.6.1...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.6.0...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.5.3...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.5.2...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.5.1...
+     -- Compatible.
+  -> Checking compatibility of matplotlib==3.5.0...
+     -- Compatible.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Found 17 compatible versions to test: ['3.9.4', '3.9.3', '3.9.2', '3.9.1.post1', '3.9.1', '3.9.0', '3.8.4', '3.7.1', '3.7.0', '3.6.3', '3.6.2', '3.6.1', '3.6.0', '3.5.3', '3.5.2', '3.5.1', '3.5.0']
+
+::group::Probe: Install & Validate for matplotlib==3.9.4
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+
+SUCCESS: Found latest working version: matplotlib==3.9.4
+::endgroup::
+--> Healing Result: Level 1 Succeeded. Found new working version: 3.9.4
+  -> SUCCESS. Locking in matplotlib==3.9.4
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 7/13] Processing 'pygame'
+PULSE: Changed packages this pass so far: {'importlib-metadata', 'lz4', 'matplotlib', 'cloudpickle', 'numpy'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to pygame==2.6.1
+
+::group::Probe: Install & Validate for pygame==2.6.1
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in pygame==2.6.1
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 8/13] Processing 'ale-py'
+PULSE: Changed packages this pass so far: {'pygame', 'importlib-metadata', 'lz4', 'matplotlib', 'cloudpickle', 'numpy'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to ale-py==0.11.2
+
+::group::Probe: Install & Validate for ale-py==0.11.2
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in ale-py==0.11.2
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 9/13] Processing 'imageio'
+PULSE: Changed packages this pass so far: {'pygame', 'importlib-metadata', 'ale-py', 'lz4', 'matplotlib', 'cloudpickle', 'numpy'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to imageio==2.37.2
+
+::group::Probe: Install & Validate for imageio==2.37.2
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in imageio==2.37.2
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 10/13] Processing 'opencv-python'
+PULSE: Changed packages this pass so far: {'pygame', 'imageio', 'importlib-metadata', 'ale-py', 'lz4', 'matplotlib', 'cloudpickle', 'numpy'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to opencv-python==4.13.0.92
+
+::group::Probe: Install & Validate for opencv-python==4.13.0.92
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in opencv-python==4.13.0.92
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 11/13] Processing 'gym-notices'
+PULSE: Changed packages this pass so far: {'pygame', 'imageio', 'importlib-metadata', 'opencv-python', 'ale-py', 'lz4', 'matplotlib', 'cloudpickle', 'numpy'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to gym-notices==0.1.0
+
+::group::Probe: Install & Validate for gym-notices==0.1.0
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in gym-notices==0.1.0
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 12/13] Processing 'box2d-py'
+PULSE: Changed packages this pass so far: {'pygame', 'imageio', 'gym-notices', 'importlib-metadata', 'opencv-python', 'ale-py', 'lz4', 'matplotlib', 'cloudpickle', 'numpy'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to box2d-py==2.3.8
+
+::group::Probe: Install & Validate for box2d-py==2.3.8
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+
+--> Probe Step 2: Installing project from current directory ('.')...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation .' in CWD: '.'
+
+--> Probe Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python /home/runner/work/gym_AURA/gym_AURA/validation_gym.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> SUCCESS: Probe passed.
+::endgroup::
+--> Toplevel Result: Direct update SUCCEEDED.
+  -> SUCCESS. Locking in box2d-py==2.3.8
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 13/13] Processing 'kiwisolver'
+PULSE: Changed packages this pass so far: {'pygame', 'imageio', 'gym-notices', 'importlib-metadata', 'opencv-python', 'ale-py', 'lz4', 'box2d-py', 'matplotlib', 'cloudpickle', 'numpy'}
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to kiwisolver==1.4.9
+
+::group::Probe: Install & Validate for kiwisolver==1.4.9
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The dependency conflict is caused by the required `kiwisolver==1.4.9` (and versions `1.4.8`, `1.4.10rc0`) mandating Python >=3.10, making it incompatible with the current Python environment which only allows up to `kiwisolver==1.4.7`.'
+    Suspected Blockers (Regex): ['kiwisolver']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'kiwisolver': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of kiwisolver==1.4.9...
+     -- Incompatible. Diagnosis: The dependency conflict arises because the required `kiwisolver==1.4.9` explicitly requires Python >=3.10, but the current Python environment is older, causing `1.4.9` to be ignored and leaving no matching distribution among the available `kiwisolver` versions `0.1.0` through `1.4.7`.
+  -> Checking compatibility of kiwisolver==1.4.8...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the current Python environment is older than 3.10, rendering the requested `kiwisolver==1.4.8` unavailable, along with other newer versions like `kiwisolver`'s `1.4.9`, `1.4.10rc0` and various other packages' versions including `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0` through `2.2.6`, `2.3.0` through `2.4.2` (including `2.4.0rc1`), and `3.10.0` through `3.10.8` (including `3.10.0rc1`), all of which require Python >=3.10 or >=3.11, thereby limiting available `kiwisolver` options to `0.1.0` through `1.4.7`.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Result: No compatible versions were found. Reverting to last known good version.
+::endgroup::
+
+--> Action: Level 1 Healing failed for 'kiwisolver'. Escalating to Level 2 'Iterative Greedy Expansion'.
+
+    -> [Greedy Expansion Iteration 1/5]
+
+::group::Co-Resolution Probe: Testing plan ['kiwisolver==1.4.9']
+--> Stage 1: Installing the proposed co-resolution dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_co_res_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -e git+https://github.com/Bhargavvvv2912/gym_AURA@97e3f0ef07ca0b82906745d72cd9215b591e809a#egg=gym ale-py==0.11.2 box2d-py==2.3.8 cloudpickle==3.1.2 cycler==0.12.1 gym-notices==0.1.0 imageio==2.37.2 importlib-metadata==8.7.1 importlib_resources==6.5.2 lz4==4.4.5 matplotlib==3.9.4 numpy==2.0.2 opencv-python==4.13.0.92 pillow==11.3.0 pygame==2.6.1 pyparsing==3.3.2 python-dateutil==2.9.0.post0 six==1.17.0 zipp==3.23.0 kiwisolver==1.4.9' in CWD: '.'
+--> ERROR: Co-resolution installation failed.
+    Diagnosis: The dependency conflict arises because the required package `kiwisolver==1.4.9` necessitates Python version >=3.10, but the current environment is running an older Python version, which only supports `kiwisolver` versions up to `1.4.7`.
+::endgroup::
+
+    -> [Greedy Expansion Iteration 2/5]
+
+       Greedy Heuristic exhausted. Handing dynamic context to Expert.
+
+    -> [LLM Refinement Attempt 1/3] Requesting Expert Plan...
+  -> Result for kiwisolver: Reverted/Kept at 1.4.7 (No Change).
+::endgroup::
+
+Pass complete with changes.
+
+::group::UPDATE PASS 2/3
+
+Prioritized Update Plan for this Pass (Highest Risk First):
+Rank  | Package                        | % of Total Risk    | Change
+----- | ------------------------------ | ------------------ | --------------------
+1     | pillow                         | 47.62             % | 11.3.0 -> 12.1.1
+2     | numpy                          | 23.81             % | 2.0.2 -> 2.4.2
+3     | matplotlib                     | 23.81             % | 3.9.4 -> 3.10.8
+4     | kiwisolver                     | 4.76              % | 1.4.7 -> 1.4.9
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 2 | ATTEMPT 1/4] Processing 'pillow'
+PULSE: Changed packages this pass so far: set()
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to pillow==12.1.1
+
+::group::Probe: Install & Validate for pillow==12.1.1
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The dependency conflict is caused by the system attempting to install `pillow==12.1.1`, which requires Python 3.10 or newer, but the current Python environment is using an older version that does not meet this requirement.'
+    Suspected Blockers (Regex): ['pillow']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'pillow': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of pillow==12.1.1...
+     -- Incompatible. Diagnosis: The dependency conflict occurs because `pillow==12.1.1` requires Python version `3.10` or higher, making it incompatible with the current Python environment, which leads to this specific version being ignored and not found.
+  -> Checking compatibility of pillow==12.1.0...
+     -- Incompatible. Diagnosis: The dependency conflict arises because the requested `pillow==12.1.0` requires Python version `>=3.10`, but the current Python environment does not satisfy this, causing pip to ignore all versions from `1.4.10rc0` up to `12.1.1` and ultimately fail to find a matching distribution.
+  -> Checking compatibility of pillow==12.0.0...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `pillow==12.0.0` (along with versions `12.1.0` and `12.1.1`) requiring Python 3.10 or higher, while the current Python environment is using an older version, rendering these specific Pillow versions unavailable.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Result: No compatible versions were found. Reverting to last known good version.
+::endgroup::
+
+--> Action: Level 1 Healing failed for 'pillow'. Escalating to Level 2 'Iterative Greedy Expansion'.
+
+    -> [Greedy Expansion Iteration 1/5]
+
+::group::Co-Resolution Probe: Testing plan ['pillow==12.1.1']
+--> Stage 1: Installing the proposed co-resolution dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_co_res_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -e git+https://github.com/Bhargavvvv2912/gym_AURA@97e3f0ef07ca0b82906745d72cd9215b591e809a#egg=gym ale-py==0.11.2 box2d-py==2.3.8 cloudpickle==3.1.2 cycler==0.12.1 gym-notices==0.1.0 imageio==2.37.2 importlib-metadata==8.7.1 importlib_resources==6.5.2 kiwisolver==1.4.7 lz4==4.4.5 matplotlib==3.9.4 numpy==2.0.2 opencv-python==4.13.0.92 pygame==2.6.1 pyparsing==3.3.2 python-dateutil==2.9.0.post0 six==1.17.0 zipp==3.23.0 pillow==12.1.1' in CWD: '.'
+--> ERROR: Co-resolution installation failed.
+    Diagnosis: The dependency conflict is caused by the requested `pillow==12.1.1` requiring a Python version of 3.10 or higher, which is incompatible with the current environment that lacks this minimum Python version.
+::endgroup::
+
+    -> [Greedy Expansion Iteration 2/5]
+
+       Greedy Heuristic exhausted. Handing dynamic context to Expert.
+
+    -> [LLM Refinement Attempt 1/3] Requesting Expert Plan...
+  -> Result for pillow: Reverted/Kept at 11.3.0 (No Change).
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 2 | ATTEMPT 2/4] Processing 'numpy'
+PULSE: Changed packages this pass so far: set()
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to numpy==2.4.2
+
+::group::Probe: Install & Validate for numpy==2.4.2
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The root cause of the dependency conflict is that `numpy==2.4.2` cannot be installed because it requires Python version 3.11 or higher, which is not met by the current environment.'
+    Suspected Blockers (Regex): ['numpy']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'numpy': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of numpy==2.4.2...
+     -- Incompatible. Diagnosis: The dependency conflict is rooted in the attempt to install `numpy==2.4.2`, which requires Python `>=3.11` but is ignored by pip because the current Python environment is incompatible with this version.
+  -> Checking compatibility of numpy==2.4.1...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requirement for `numpy==2.4.1`, which, along with `numpy` versions `2.4.0`, `2.4.0rc1`, and `2.4.2`, explicitly `Requires-Python >=3.11`, making them incompatible and thus ignored by the current Python environment.
+  -> Checking compatibility of numpy==2.4.0...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `numpy==2.4.0` (and its related `2.4.0rc1` version) requiring Python >=3.11, while these specific versions are being ignored because the current Python environment is an older, incompatible version.
+  -> Checking compatibility of numpy==2.3.5...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `numpy==2.3.5` (which requires Python >=3.11) is incompatible with the current Python environment, leading to its exclusion, along with other `numpy` versions (`1.4.10rc0, 1.4.8, 1.4.9, 12.0.0, 12.1.0, 12.1.1, 2.1.0, 2.1.1, 2.1.2, 2.1.3, 2.2.0, 2.2.1, 2.2.2, 2.2.3, 2.2.4, 2.2.5, 2.2.6, 2.3.0, 2.3.1, 2.3.2, 2.3.3, 2.3.4, 2.4.0, 2.4.0rc1, 2.4.1, 2.4.2, 3.10.0, 3.10.0rc1, 3.10.1, 3.10.3, 3.10.5, 3.10.6, 3.10.7, 3.10.8`) that require Python >=3.10 or >=3.11.
+  -> Checking compatibility of numpy==2.3.4...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `numpy==2.3.4` requiring Python version `>=3.11`, which is incompatible with the current Python environment, leading to `numpy` versions such as `2.3.0` through `2.4.2` being ignored.
+  -> Checking compatibility of numpy==2.3.3...
+     -- Incompatible. Diagnosis: The dependency conflict occurs because the requested `numpy==2.3.3` (and other versions like `2.3.0` through `2.4.2`) requires Python >=3.11, but the current Python environment is incompatible, causing these versions to be ignored.
+  -> Checking compatibility of numpy==2.3.2...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the required `numpy==2.3.2` cannot be installed because it, along with `numpy` versions `2.3.0` through `2.3.5`, explicitly demands Python `>=3.11`, making it incompatible with the current environment which only has `numpy` versions up to `2.0.2` available.
+  -> Checking compatibility of numpy==2.3.1...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `numpy==2.3.1` cannot be found because it (and all other versions like `1.4.10rc0, 1.4.8, 1.4.9, 12.0.0, 12.1.0, 12.1.1, 2.1.0, 2.1.1, 2.1.2, 2.1.3, 2.2.0, 2.2.1, 2.2.2, 2.2.3, 2.2.4, 2.2.5, 2.2.6, 2.3.0, 2.3.2, 2.3.3, 2.3.4, 2.3.5, 2.4.0, 2.4.0rc1, 2.4.1, 2.4.2, 3.10.0, 3.10.0rc1, 3.10.1, 3.10.3, 3.10.5, 3.10.6, 3.10.7, 3.10.8`) explicitly require Python versions `>=3.10` or `>=3.11`, which are incompatible with the current Python environment, leaving no distribution for `numpy==2.3.1` among the compatible versions available (ranging from `1.3.0` to `2.0.2`).
+  -> Checking compatibility of numpy==2.3.0...
+     -- Incompatible. Diagnosis: The dependency conflict is rooted in the current Python environment being too old for the requested `numpy==2.3.0`, which specifically `Requires-Python >=3.11` and was thus ignored, leaving only older `numpy` versions such as `1.26.4` and `2.0.2` available.
+  -> Checking compatibility of numpy==2.2.6...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requirement for `numpy==2.2.6`, which, along with other `2.x.x` versions like `2.1.0` through `2.2.6` and many others, requires Python >=3.10, while the current Python environment is incompatible and therefore ignores these versions.
+  -> Checking compatibility of numpy==2.2.5...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `numpy==2.2.5` requiring Python version `>=3.10`, which is incompatible with the current Python environment where it was ignored.
+  -> Checking compatibility of numpy==2.2.4...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the current Python environment does not meet the minimum version requirement of Python >= 3.10 or >= 3.11 for the requested `numpy==2.2.4` and other `numpy` versions including `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0`, `2.1.1`, `2.1.2`, `2.1.3`, `2.2.0`, `2.2.1`, `2.2.2`, `2.2.3`, `2.2.4`, `2.2.5`, `2.2.6`, `2.3.0`, `2.3.1`, `2.3.2`, `2.3.3`, `2.3.4`, `2.3.5`, `2.4.0`, `2.4.0rc1`, `2.4.1`, `2.4.2`, `3.10.0`, `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.7`, and `3.10.8`, causing them to be ignored and `numpy==2.2.4` to be ultimately unavailable.
+  -> Checking compatibility of numpy==2.2.3...
+     -- Incompatible. Diagnosis: The dependency conflict stems from the requested `numpy==2.2.3` requiring Python 3.11 or higher, which causes it and numerous other `numpy` versions like `1.4.10rc0`, `2.1.0`, `2.2.0`, `2.2.1`, `2.2.2`, `2.2.4`, `2.2.5`, `2.2.6`, `2.3.0`, `2.4.0`, `3.10.0`, `12.0.0`, and `12.1.0` to be ignored for requiring a newer Python version than the current environment provides.
+  -> Checking compatibility of numpy==2.2.2...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the required `numpy==2.2.2` could not be found because it (along with many other versions like `1.4.10rc0`, `12.0.0`, `2.1.0`, `2.3.0`, `2.4.0`, `3.10.0`) was ignored for requiring a Python version (`>=3.10` or `>=3.11`) that is newer than the current environment's Python version.
+  -> Checking compatibility of numpy==2.2.1...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `numpy==2.2.1` requiring Python version 3.10 or newer, while the current Python environment is older, leading to `numpy==2.2.1` being ignored.
+  -> Checking compatibility of numpy==2.2.0...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the desired `numpy==2.2.0` (which requires Python `>=3.10`) and other available versions like `2.3.0` (which requires Python `>=3.11`) were ignored because the current Python environment is running an older, incompatible version.
+  -> Checking compatibility of numpy==2.1.3...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the desired `numpy==2.1.3` requiring Python 3.10 or higher, while the current environment is running an older, incompatible Python version, leading to `numpy` versions like `1.4.10rc0` through `2.2.6` requiring Python >=3.10 and `2.3.0` through `2.4.2` requiring Python >=3.11 being ignored.
+  -> Checking compatibility of numpy==2.1.2...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `numpy==2.1.2` being ignored, along with other `numpy` versions such as `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0`, `2.1.1`, `2.1.3`, `2.2.0`, `2.2.1`, `2.2.2`, `2.2.3`, `2.2.4`, `2.2.5`, `2.2.6` (which all `Requires-Python >=3.10`), and `2.3.0`, `2.3.1`, `2.3.2`, `2.3.3`, `2.3.4`, `2.3.5`, `2.4.0`, `2.4.0rc1`, `2.4.1`, `2.4.2` (which all `Requires-Python >=3.11`), and `3.10.0`, `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.7`, `3.10.8` (which also `Requires-Python >=3.10`), because the current Python environment does not meet these version requirements, while the available `numpy` versions (`1.3.0`, `1.4.1`, `1.5.0`, `1.5.1`, `1.6.0`, `1.6.1`, `1.6.2`, `1.7.0`, `1.7.1`, `1.7.2`, `1.8.0`, `1.8.1`, `1.8.2`, `1.9.0`, `1.9.1`, `1.9.2`, `1.9.3`, `1.10.0.post2`, `1.10.1`, `1.10.2`, `1.10.4`, `1.11.0`, `1.11.1`, `1.11.2`, `1.11.3`, `1.12.0`, `1.12.1`, `1.13.0`, `1.13.1`, `1.13.3`, `1.14.0`, `1.14.1`, `1.14.2`, `1.14.3`, `1.14.4`, `1.14.5`, `1.14.6`, `1.15.0`, `1.15.1`, `1.15.2`, `1.15.3`, `1.15.4`, `1.16.0`, `1.16.1`, `1.16.2`, `1.16.3`, `1.16.4`, `1.16.5`, `1.16.6`, `1.17.0`, `1.17.1`, `1.17.2`, `1.17.3`, `1.17.4`, `1.17.5`, `1.18.0`, `1.18.1`, `1.18.2`, `1.18.3`, `1.18.4`, `1.18.5`, `1.19.0`, `1.19.1`, `1.19.2`, `1.19.3`, `1.19.4`, `1.19.5`, `1.20.0`, `1.20.1`, `1.20.2`, `1.20.3`, `1.21.0`, `1.21.1`, `1.21.2`, `1.21.3`, `1.21.4`, `1.21.5`, `1.21.6`, `1.22.0`, `1.22.1`, `1.22.2`, `1.22.3`, `1.22.4`, `1.23.0`, `1.23.1`, `1.23.2`, `1.23.3`, `1.23.4`, `1.23.5`, `1.24.0`, `1.24.1`, `1.24.2`, `1.24.3`, `1.24.4`, `1.25.0`, `1.25.1`, `1.25.2`, `1.26.0`, `1.26.1`, `1.26.2`, `1.26.3`, `1.26.4`, `2.0.0`, `2.0.1`, `2.0.2`) do not include `2.1.2`.
+  -> Checking compatibility of numpy==2.1.1...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the current Python environment being too old, preventing the installation of the required `numpy==2.1.1` because it (along with other versions such as `numpy==2.1.0` and `numpy==2.3.0`) is ignored due to explicitly requiring Python >=3.10 or >=3.11.
+  -> Checking compatibility of numpy==2.1.0...
+     -- Incompatible. Diagnosis: The dependency conflict stems from the current Python environment not satisfying the `Requires-Python >=3.10` prerequisite for the requested `numpy==2.1.0` package, causing it to be ignored and unavailable.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Result: No compatible versions were found. Reverting to last known good version.
+::endgroup::
+
+--> Action: Level 1 Healing failed for 'numpy'. Escalating to Level 2 'Iterative Greedy Expansion'.
+
+    -> [Greedy Expansion Iteration 1/5]
+
+::group::Co-Resolution Probe: Testing plan ['numpy==2.4.2']
+--> Stage 1: Installing the proposed co-resolution dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_co_res_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -e git+https://github.com/Bhargavvvv2912/gym_AURA@97e3f0ef07ca0b82906745d72cd9215b591e809a#egg=gym ale-py==0.11.2 box2d-py==2.3.8 cloudpickle==3.1.2 cycler==0.12.1 gym-notices==0.1.0 imageio==2.37.2 importlib-metadata==8.7.1 importlib_resources==6.5.2 kiwisolver==1.4.7 lz4==4.4.5 matplotlib==3.9.4 opencv-python==4.13.0.92 pillow==11.3.0 pygame==2.6.1 pyparsing==3.3.2 python-dateutil==2.9.0.post0 six==1.17.0 zipp==3.23.0 numpy==2.4.2' in CWD: '.'
+--> ERROR: Co-resolution installation failed.
+    Diagnosis: The dependency conflict is caused by the requested `numpy==2.4.2` requiring Python version 3.11 or higher, which is incompatible with the current Python environment and thus leads to `numpy==2.4.2` being ignored.
+::endgroup::
+
+    -> [Greedy Expansion Iteration 2/5]
+
+       Greedy Heuristic exhausted. Handing dynamic context to Expert.
+
+    -> [LLM Refinement Attempt 1/3] Requesting Expert Plan...
+  -> Result for numpy: Reverted/Kept at 2.0.2 (No Change).
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 2 | ATTEMPT 3/4] Processing 'matplotlib'
+PULSE: Changed packages this pass so far: set()
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to matplotlib==3.10.8
+
+::group::Probe: Install & Validate for matplotlib==3.10.8
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The dependency conflict stems from the requirement for `matplotlib==3.10.8`, which demands Python 3.10 or newer, but the current environment's Python version is older, causing `pip` to ignore the compatible `matplotlib` version.'
+    Suspected Blockers (Regex): ['matplotlib']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'matplotlib': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of matplotlib==3.10.8...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the requested `matplotlib==3.10.8` requiring Python version >=3.10, which is incompatible with the current Python environment.
+  -> Checking compatibility of matplotlib==3.10.7...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the current Python environment not meeting the minimum version requirements for the desired `matplotlib==3.10.7` and other newer `matplotlib` versions like `1.4.10rc0`, `2.3.0`, and `3.10.0`, which explicitly require Python `>=3.10` or `>=3.11`.
+  -> Checking compatibility of matplotlib==3.10.6...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `matplotlib==3.10.6`, along with other ignored versions such as `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0` through `2.2.6`, `2.3.0` through `2.4.2`, `3.10.0`, `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.7`, and `3.10.8`, all explicitly require a Python version of at least 3.10 or 3.11, which is not met by the current Python environment, leading to their unavailability.
+  -> Checking compatibility of matplotlib==3.10.5...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the desired `matplotlib==3.10.5` (along with other versions like `3.10.0`, `3.10.8`, and `2.4.2`) explicitly requires a Python version of `>=3.10` or `>=3.11`, which is incompatible with the currently active Python environment.
+  -> Checking compatibility of matplotlib==3.10.3...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that `matplotlib==3.10.3` was ignored because it `Requires-Python >=3.10`, indicating the current Python environment is an older, incompatible version.
+  -> Checking compatibility of matplotlib==3.10.1...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the system's current Python version being incompatible with the requested `matplotlib==3.10.1`, as this specific package version (along with many others, such as `matplotlib==3.10.0` and `matplotlib==2.4.2`) explicitly requires Python `>=3.10` or even `>=3.11`.
+  -> Checking compatibility of matplotlib==3.10.0...
+     -- Incompatible. Diagnosis: The dependency conflict for `matplotlib==3.10.0` arises because it, along with other `matplotlib` versions like `1.4.10rc0`, `1.4.8`, `1.4.9`, `12.0.0`, `12.1.0`, `12.1.1`, `2.1.0`, `2.1.1`, `2.1.2`, `2.1.3`, `2.2.0`, `2.2.1`, `2.2.2`, `2.2.3`, `2.2.4`, `2.2.5`, `2.2.6`, `2.3.0`, `2.3.1`, `2.3.2`, `2.3.3`, `2.3.4`, `2.3.5`, `2.4.0`, `2.4.0rc1`, `2.4.1`, `2.4.2`, `3.10.0rc1`, `3.10.1`, `3.10.3`, `3.10.5`, `3.10.6`, `3.10.7`, and `3.10.8`, were ignored by pip because they all require a higher Python version (>=3.10 or >=3.11) than the one currently in use.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Result: No compatible versions were found. Reverting to last known good version.
+::endgroup::
+
+--> Action: Level 1 Healing failed for 'matplotlib'. Escalating to Level 2 'Iterative Greedy Expansion'.
+
+    -> [Greedy Expansion Iteration 1/5]
+
+::group::Co-Resolution Probe: Testing plan ['matplotlib==3.10.8']
+--> Stage 1: Installing the proposed co-resolution dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_co_res_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -e git+https://github.com/Bhargavvvv2912/gym_AURA@97e3f0ef07ca0b82906745d72cd9215b591e809a#egg=gym ale-py==0.11.2 box2d-py==2.3.8 cloudpickle==3.1.2 cycler==0.12.1 gym-notices==0.1.0 imageio==2.37.2 importlib-metadata==8.7.1 importlib_resources==6.5.2 kiwisolver==1.4.7 lz4==4.4.5 numpy==2.0.2 opencv-python==4.13.0.92 pillow==11.3.0 pygame==2.6.1 pyparsing==3.3.2 python-dateutil==2.9.0.post0 six==1.17.0 zipp==3.23.0 matplotlib==3.10.8' in CWD: '.'
+--> ERROR: Co-resolution installation failed.
+    Diagnosis: The dependency conflict stems from the inability to install the required `matplotlib==3.10.8`, as this specific version (along with `1.4.10rc0`, `1.4.8`, `1.4.9`, and other versions up to `3.10.8`) explicitly requires Python 3.10 or newer, which is incompatible with the current Python environment.
+::endgroup::
+
+    -> [Greedy Expansion Iteration 2/5]
+
+       Greedy Heuristic exhausted. Handing dynamic context to Expert.
+
+    -> [LLM Refinement Attempt 1/3] Requesting Expert Plan...
+  -> Result for matplotlib: Reverted/Kept at 3.9.4 (No Change).
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 2 | ATTEMPT 4/4] Processing 'kiwisolver'
+PULSE: Changed packages this pass so far: set()
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to kiwisolver==1.4.9
+
+::group::Probe: Install & Validate for kiwisolver==1.4.9
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/gym_AURA/gym_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The dependency conflict is caused by the requested `kiwisolver==1.4.9` (along with versions `1.4.8` and `1.4.10rc0`) requiring Python >=3.10, which is incompatible with the current environment's Python version, thus preventing a matching distribution from being found.'
+    Suspected Blockers (Regex): ['kiwisolver']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'kiwisolver': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of kiwisolver==1.4.9...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by the required `kiwisolver==1.4.9` explicitly demanding Python >=3.10, which means this version is ignored and no matching distribution is found among the compatible `kiwisolver` versions available (0.1.0 through 1.4.7).
+  -> Checking compatibility of kiwisolver==1.4.8...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that the requested `kiwisolver==1.4.8` requires Python >=3.10, which is incompatible with the current Python environment, leading to its exclusion along with other newer versions like `1.4.9` and `1.4.10rc0`, while only `kiwisolver` versions up to `1.4.7` are available.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Result: No compatible versions were found. Reverting to last known good version.
+::endgroup::
+
+--> Action: Level 1 Healing failed for 'kiwisolver'. Escalating to Level 2 'Iterative Greedy Expansion'.
+
+    -> [Greedy Expansion Iteration 1/5]
+
+::group::Co-Resolution Probe: Testing plan ['kiwisolver==1.4.9']
+--> Stage 1: Installing the proposed co-resolution dependency set...
+--> Running command: '/home/runner/work/gym_AURA/gym_AURA/temp_co_res_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -e git+https://github.com/Bhargavvvv2912/gym_AURA@97e3f0ef07ca0b82906745d72cd9215b591e809a#egg=gym ale-py==0.11.2 box2d-py==2.3.8 cloudpickle==3.1.2 cycler==0.12.1 gym-notices==0.1.0 imageio==2.37.2 importlib-metadata==8.7.1 importlib_resources==6.5.2 lz4==4.4.5 matplotlib==3.9.4 numpy==2.0.2 opencv-python==4.13.0.92 pillow==11.3.0 pygame==2.6.1 pyparsing==3.3.2 python-dateutil==2.9.0.post0 six==1.17.0 zipp==3.23.0 kiwisolver==1.4.9' in CWD: '.'
+--> ERROR: Co-resolution installation failed.
+    Diagnosis: The dependency conflict is caused because the required `kiwisolver==1.4.9` specifies a Python requirement of `>=3.10`, which is incompatible with the older Python environment currently in use, leading to `kiwisolver==1.4.9` being ignored and no matching distribution found.
+::endgroup::
+
+    -> [Greedy Expansion Iteration 2/5]
+
+       Greedy Heuristic exhausted. Handing dynamic context to Expert.
+
+    -> [LLM Refinement Attempt 1/3] Requesting Expert Plan...
+  -> Result for kiwisolver: Reverted/Kept at 1.4.7 (No Change).
+::endgroup::
+
+No effective version changes were possible in this pass. The system has converged.
+
+######################################################################
+### OVERALL UPDATE RUN SUMMARY ###
+
+[SUCCESS] The following packages were successfully updated:
+Package                        | Old Version          | New Version         
+------------------------------ | -------------------- | --------------------
+numpy                          | 1.21.0               | 2.0.2               
+importlib-metadata             | 4.8.1                | 8.7.1               
+lz4                            | 3.1.3                | 4.4.5               
+cloudpickle                    | 1.6.0                | 3.1.2               
+matplotlib                     | 3.4.3                | 3.9.4               
+pygame                         | 2.1.0                | 2.6.1               
+ale-py                         | 0.7.1                | 0.11.2              
+imageio                        | 2.14.1               | 2.37.2              
+opencv-python                  | 4.5.3.56             | 4.13.0.92           
+gym-notices                    | 0.0.4                | 0.1.0               
+box2d-py                       | 2.3.5                | 2.3.8               
+######################################################################
+
+
+Run complete. The final requirements.txt is the latest provably working version.
