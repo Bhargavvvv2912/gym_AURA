@@ -1,0 +1,11 @@
+numpy
+cloudpickle
+importlib_metadata
+gym_notices
+opencv-python
+lz4
+matplotlib
+box2d-py
+pygame
+ale-py
+imageio
