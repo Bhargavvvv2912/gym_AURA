@@ -3,7 +3,7 @@
 import os
 import sys
 # We import the NEW Google library
-from google import genai
+import google.generativeai as genai
 
 from agent_logic import DependencyAgent
 
